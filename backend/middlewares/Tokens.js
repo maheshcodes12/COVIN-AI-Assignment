@@ -39,7 +39,6 @@ export const verifyAndRefreshToken = async (req, res, next) => {
 	// Verify the access token
 	jwt.verify(accessToken, "TokenhasitsSecret", async (err, decoded) => {
 		if (err && err.name === "TokenExpiredError") {
-			// Access token has expired
 			try {
 				// Generate a new access token
 				const newAccessToken = generateTokens(user_id);

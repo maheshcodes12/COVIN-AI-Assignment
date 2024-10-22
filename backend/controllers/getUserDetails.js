@@ -12,8 +12,6 @@ export const getUserDetails = async (req, res) => {
 			[user_id]
 		);
 
-		console.log(result);
-
 		if (result.rowCount == 0)
 			return res.status(404).json({ error: "User not found" });
 

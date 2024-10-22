@@ -4,10 +4,9 @@ import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 import fs from "fs";
 
-// Define the directory where CSV files will be saved
-const csvDirectory = "./generated_files"; // Specify your desired path here
+// directory where CSV files will be saved
+const csvDirectory = "./generated_files";
 
-// Ensure the directory exists
 if (!fs.existsSync(csvDirectory)) {
 	fs.mkdirSync(csvDirectory);
 }
@@ -39,7 +38,7 @@ export async function generateBalanceSheetForUser(req, res) {
 
 		// 2. Define CSV writer
 		const csvWriter = createObjectCsvWriter({
-			path: join(csvDirectory, `balance_sheet_${user_id}.csv`), // Use hard-coded path
+			path: join(csvDirectory, `balance_sheet_${user_id}.csv`),
 			header: [
 				{ id: "expense_id", title: "Expense ID" },
 				{ id: "amount", title: "Amount" },
@@ -59,7 +58,7 @@ export async function generateBalanceSheetForUser(req, res) {
 				res.status(500).json({ message: "Error generating the balance sheet" });
 			}
 
-			// 5. Optionally delete the file after sending it
+			// 5. delete the file after sending it
 			fs.unlink(filePath, (unlinkErr) => {
 				if (unlinkErr) console.error("Error deleting the file:", unlinkErr);
 			});
@@ -91,7 +90,7 @@ export async function generateOverallBalanceSheet(req, res) {
 
 		// 2. Define CSV writer
 		const csvWriter = createObjectCsvWriter({
-			path: join(csvDirectory, `overall_balance_sheet.csv`), // Use hard-coded path
+			path: join(csvDirectory, `overall_balance_sheet.csv`),
 			header: [
 				{ id: "expense_id", title: "Expense ID" },
 				{ id: "total_amount", title: "Total Amount" },
@@ -114,7 +113,7 @@ export async function generateOverallBalanceSheet(req, res) {
 					.json({ message: "Error generating the overall balance sheet" });
 			}
 
-			// 5. Optionally delete the file after sending it
+			// 5. delete the file after sending it
 			fs.unlink(filePath, (unlinkErr) => {
 				if (unlinkErr) console.error("Error deleting the file:", unlinkErr);
 			});

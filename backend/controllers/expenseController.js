@@ -13,12 +13,12 @@ export async function addExpense(req, res) {
 
 		const { total_amount, participants, mode } = req.body;
 
-		// Check for valid mode
+		// 1. Check for valid mode
 		if (!["equal", "exact", "percentage"].includes(mode)) {
 			throw new Error("Invalid mode provided");
 		}
 
-		// Validate participants and amounts based on the mode
+		// 2. Validate participants and amounts based on the mode
 		if (mode === "equal") {
 			validateEqualMode(total_amount, participants);
 		} else if (mode === "exact") {
@@ -27,7 +27,7 @@ export async function addExpense(req, res) {
 			validatePercentageMode(total_amount, participants);
 		}
 
-		// 1. Insert the expense into the expenses table
+		// 3. Insert the expense into the expenses table
 		const expenseId = uuidv4();
 		const result = await client.query(
 			`
@@ -37,7 +37,7 @@ export async function addExpense(req, res) {
 			[expenseId, total_amount]
 		);
 
-		// 2. Insert the participants into the expense_participants table
+		// 4. Insert the participants into the expense_participants table
 		for (const participant of participants) {
 			await client.query(
 				`
@@ -70,6 +70,7 @@ export async function getIndividualExpenses(req, res) {
 	try {
 		const { user_id } = req.query;
 
+		// 1. query expense data
 		const result = await pool.query(
 			`
             SELECT e.expense_id , e.amount, ep.split, ep.paid FROM expenses e JOIN expense_participants ep ON e.expense_id = ep.expense_id WHERE ep.participant_id = $1
@@ -77,6 +78,7 @@ export async function getIndividualExpenses(req, res) {
 			[user_id]
 		);
 
+		// 2. calculate total expense
 		let total_expense = 0;
 		result.rows.forEach((expense) => {
 			total_expense += expense.amount;
@@ -123,7 +125,7 @@ export async function getOverallExpenses(req, res) {
 
 		res.status(200).json({
 			message: "Got overall expenses successfully",
-			expenses: expenses, // Send all expenses data
+			expenses: expenses,
 		});
 	} catch (error) {
 		console.error("Error getting overall expenses:", error);
