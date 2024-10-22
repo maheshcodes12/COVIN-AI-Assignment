@@ -66,6 +66,7 @@ export const login = async (req, res) => {
 			return res.json({
 				success: true,
 				accessToken: token,
+				user_id: userid_from_db,
 				message: "Logged in successfully",
 			});
 		} else {
